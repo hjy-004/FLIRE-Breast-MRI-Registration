@@ -1,6 +1,4 @@
 function FLIRE_for_T1_Breast_MRI(dirlist,dirname_proc,outdir,method,veclist,inputType,preregType,forceflag)
-% formerly RSI_breast_UCSD_long_new2.m
-
 %% Part 1: Initalize Data ---------------------------------------------------
 dirname_annot = dirname_proc;
 dirname_annot2 = outdir;
@@ -152,11 +150,7 @@ for veci = 1:length(veclist)
                     datastructs{sdiri}.di1vol1_fwd = single(di1vol1_fwd);
                     datastructs{sdiri}.di2vol1_fwd = single(di2vol1_fwd);
                     datastructs{sdiri}.di3vol1_fwd = single(di3vol1_fwd);
-%                     if ~strcmp(preregType,'none')
-%                         datastructs{sdiri}.di1vol1_pre = single(di1vol1_pre);
-%                         datastructs{sdiri}.di2vol1_pre = single(di2vol1_pre);
-%                         datastructs{sdiri}.di3vol1_pre = single(di3vol1_pre);
-%                     end
+
                     datastructs{sdiri}.mins_load = t0_total_vec(1)+t0_total_vec(sdiri);
                     datastructs{sdiri}.mins_reg = t1_total;
                     datastructs{sdiri}.mins = t0_total_vec(1)+t0_total_vec(sdiri)+t1_total;
@@ -167,9 +161,7 @@ for veci = 1:length(veclist)
             fprintf(1,'  **Failed*** ID:%s Message:%s\n',ME.identifier,ME.message);
             disp(ME.stack)
         end
-        %save(fname_out,'datastructs',version);
-        %fprintf(1,'--- file %s written\n',fname_out);
-        
+
         % save displacement_field because it is a smaller file for faster reading of imgs
         fname_out2 = sprintf('%s/%s/%s/displacement_field.mat',outdir,dirlist{diri},method);
         if ~exist(fname_out2) || forceflag
