@@ -11,3 +11,5 @@ prominent signal intensity features before tuning finer details, which reduces t
 Other than the scripts included in this repository, the user would need to download 3 additional Matlab scripts from Mathworks File 
 Exchange website below: "movepixels.m", "movepixels_3d_double.m", and "movepixels_3d_single.m".
 https://www.mathworks.com/matlabcentral/fileexchange/21451-multimodality-non-rigid-demon-algorithm-image-registration?s_tid=srchtitle
+
+These scripts have been tested with Matlab R2020a running in Rocky Linux release 8.8.
