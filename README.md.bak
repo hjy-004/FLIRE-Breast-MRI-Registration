@@ -8,6 +8,8 @@ the moving and target images by convolution with an isotropic Gaussian kernel of
 each successive iteration so that smaller differences in signal intensity become distinguishable. This technique aligns the most 
 prominent signal intensity features before tuning finer details, which reduces the likelihood of converging to a suboptimal solution.
 
-Other than the scripts included in this repository, the user would need to download 3 additional Matlab scripts from Mathworks File 
-Exchange website below: "movepixels.m", "movepixels_3d_double.m", and "movepixels_3d_single.m".
+Other than the scripts included in this repository, the user would need to download an additional Matlab script along with its 
+dependencies from Mathworks File Exchange website below: "movepixels.m", "movepixels_3d_double.c", and "movepixels_3d_single.c".
 https://www.mathworks.com/matlabcentral/fileexchange/21451-multimodality-non-rigid-demon-algorithm-image-registration?s_tid=srchtitle
+
+The scripts in this repository have been tested with Matlab R2020a running in Rocky Linux release 8.8.
