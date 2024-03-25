@@ -1,0 +1,106 @@
+%% Part 0: Set Up Matlab ---------------------------------------------------
+% Set the path to where all the dependences are located
+addpath(genpath('/space/wil-syn01/1/cmig_body/RSIData/Code/Code_MT_LKF/Breast_Code/reg_proj/Github_upload'));
+
+%% Part 1: Prepare Data ---------------------------------------------------
+% Part 1.1: Initialize Data
+% set paths to where the source images and the output are located
+dirname_proc = '/directory_to_where_the_source_image';
+outdir = '/space/wil-syn01/1/cmig_body/RSIData/Code/Code_MT_LKF/Breast_Code/reg_proj/Github_upload/longitudinal_study';
+
+% patientList = breast_get_longitudinalPatientList; patientList = struct2cell(patientList);% patients from Maren
+patientList = {...
+%     'Cc776A01D6404Ed66Ae9Eb09054Dc7F3', ... %maren exclude
+%     'Cti00229D2Abc5802Ba4C6',...
+%     'Cti056E752A6A1356C2Db5', ... 
+    'Cti24A313973399Bcce8A9', ...
+%     'Cti32Ae96288Efe442E2Df',...
+%     'Cti3A0B97919B19B31A615', ...
+%     'Cti3Dd10A83D457450F300', ...
+%     'Cti48Df7692C48567D2285', ...
+%     'Cti604D813A323339D551A',...
+%     'Cti694Aa3C8254005851C5', ...
+%     'Cti6E63Fdd50D13Ac74301', ... %maren exclude
+%     'Cti7A496Bc2Dcce8Ebfa68', ...
+%     'Cti7F91Fd702Dfc7Ca3374', ...
+%     'Cti81919Addddbf13E5320', ...
+%     'Cti83Ced4B86F4D16Aa9B7', ...
+%     'Cti8Ab538D23Bab96A53C1', ...
+%     'Cti922177Fbf3F5Fad932B', ...
+%     'Cti9D974D82002Cbc8Ea86', ...
+%     'Ctia40895A3Eeccb04F5A6', ...
+%     'Ctia654B050781Be2C9794', ...
+%     'Ctib735A11728594E0D048', ...
+%     'Ctid302B82B10A0F343Cb5', ... %maren exclude
+%     'Ctid766272B6Cc3F51Ecc1', ...
+%     'Ctidf250Fd3Eef2473F7C8'... %maren exlcude
+%     'Ctie191896F63Add406495', ...
+%     'Ctie39808570C04B5381Ea', ...
+%     'Ctie9Bad367D699944815D', ...
+%     'Ctiea24808Eb546115855B', ...
+%     'Ctiebbb2C8820Bc0C16A6E', ...
+%     'Ctied271077389F07F1275', ...
+%     'Ctifa0917Ad8488Ccbc696', ...
+%     'Ctifc46Adb3997622E4A67', ...
+    };
+
+% patientList2 = { ...
+%     'Cti00B60E0Cf9Ac3Ebd1Fa', ... %PPFOV=100
+%     'Ctieeeab133B5961B17Ae1', ... %PPFOV=100
+%     'Cti69E02Dd18Ccc0F149E5', ... %no RSI scan
+%     };
+% 
+% patientList3 = {...
+%     'Cti17Fb7A5Cfe20B81Eee0'
+%     'Cti1C8D64255Cb21F7Fdfa'
+%     'Cti2503Ea5089B44111256'
+%     'Cti257E83Ac063B6F000D0'
+%     'Cti2Da22E3Ecf344314960'
+%     'Cti4Dc340Cf5Bca6446808'
+%     'Cti4E42B12C02Aef00C21D'
+%     'Cti62Ddcfbd0E65C822B0D'
+%     'Cti66E17F5Dad423Cc9746'
+%     'Cti82E1928B50B75172488'
+%     'Cti86169C070D082F5834F'
+%     'Cti8A843C4C2F3841E9194'
+%     'Cti9D4A2C5150B41D8D416'
+%     'Cti9De1E0C4A1C38D6C2E4'
+%     'Cti9Fe900Cf24Fca432Bf3'
+%     'Ctia212C70292Dd9B4B27C'
+%     'Cticbeae5C9Df8De049B2C'
+%     'Cticd48Dcc6E21D9F1Bb33'
+%     'Ctid12B9C301F5F1Bcb660'
+%     'Ctid693A36677C74E9A74B'
+%     'Ctidfe500047487Ab203F1'
+%     'Ctie039222A838453Af7E5'
+%     'Ctif945D9E39D9986Fe967'
+%     'F96A37498188Fe15154A650Cec018200'
+%     };
+
+% dirlist = cat(2,patientList,patientList2,patientList3');
+dirlist = cat(2,patientList);
+% dirlist = unique(dirlist); % sort a-z and remove duplicates
+
+%TO EDIT
+veclist=[1:length(dirlist)]; %idx of patients in dirlist for analysis
+dirlist(veclist)
+%method = 'FLIRE1509'; 
+%FLIRE1508 for figures and analysis, FLIRE1509 for runtime
+methodlist ={'FLIRE1508'} %used this one for manuscript
+inputType = 'T1_noFS_PRE'; %Options: 'T1_noFS_PRE','T1_FS_PRE','T1_noFS_PRE,T1_FS_PRE'
+preregType = 'affine';     %Options: 'none','translation','rigid','affine'
+forceflag = true;          %Options: true, false, 0, 1
+
+%% Part 1: Check if files exist and copy files
+if 0
+    reg_pre_ADCMap_resDCE(dirlist,dirname_proc,veclist)
+    reg_pre_check_files(dirlist,dirname_proc); % Check for presence of files
+    reg_pre_mask(dirlist,dirname_proc,outdir,veclist)  % copy 1)cancer ROI, 2)contralateral ROI, 3)determine body mask thresh, 4) dist(mm) in and surrounding mask
+    reg_pre_none_T2(dirlist,dirname_proc,outdir,veclist,forceflag) % copy 1)series no reg: T1_noFS, T1_FS, DCE_SUB_Ph2, ADC, C1/C2/C1C2, T2_FS, T2_FS_resDCE
+end
+%% Part 2: Registration
+method = 'FLIRE_test_github';
+% veclist = [1:3];
+if contains(method,'FLIRE')
+    FLIRE_for_T1_Breast_MRI(dirlist,dirname_proc,outdir,method,veclist,inputType,preregType,forceflag)
+end
